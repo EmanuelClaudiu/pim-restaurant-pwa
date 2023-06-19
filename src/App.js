@@ -1,23 +1,51 @@
-import logo from './logo.svg';
 import './App.css';
+import { useState } from 'react';
+import axios from 'axios';
 
 function App() {
+  const [url, setUrl] = useState('');
+  const [response, setResponse] = useState('');
+
+  const handleInputChange = (event) => {
+    setUrl(event.target.value);
+  };
+
+  const handleClickGet = () => {
+    axios
+      .get(url)
+      .then((response) => {
+        setResponse(JSON.stringify(response.data));
+      })
+      .catch((error) => {
+        setResponse(JSON.stringify(error));
+      });
+  };
+
+  const handleClickPost = () => {
+    axios
+      .post(url, { code: "11" })
+      .then((response) => {
+        setResponse(JSON.stringify(response));
+      })
+      .catch((error) => {
+        setResponse(JSON.stringify(error));
+      });
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="container">
+      <input
+        type="text"
+        placeholder="Enter base URL"
+        className="request-input"
+        onChange={(event) => {
+          handleInputChange(event);
+        }}
+      />
+      <button className="request-button" onClick={handleClickGet}>
+        Make Request
+      </button>
+      <p>{response}</p>
     </div>
   );
 }
